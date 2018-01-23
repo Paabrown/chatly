@@ -1,1 +1,10 @@
-console.log('hello world!');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import fire from './firebase/firebase';
+import App from './components/App';
+
+ReactDOM.render(
+  <App></App>,
+  document.getElementById('root')
+)
+
