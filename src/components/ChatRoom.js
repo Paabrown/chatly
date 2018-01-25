@@ -5,8 +5,10 @@ import MessageEntry from './MessageEntry';
 class ChatRoom extends Component {
   componentDidMount() {
     const { roomId } = this.props;
+    db.Rooms.child()
+
     db.Rooms.child(roomId).child('events').on('childAdded', () => {
-      
+
     })
   }
 

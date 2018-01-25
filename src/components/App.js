@@ -6,6 +6,11 @@ import ChatRoom from './ChatRoom';
 // to-dos
 // sanitize inputs
 // display who's typing
+// make sure the messages are sorted
+
+// NOTE TO SELF - JUST TAKE THE EVENTS OUT OF THE ROOMS
+// THAT WILL SOLVE ALMOST ALL OF YOUR PROBLEMS
+// YOU CAN STORE MESSAGE ON THE TOP LEVEL OF THE APP
 
 class App extends Component {
   constructor(props) {
@@ -15,18 +20,35 @@ class App extends Component {
       rooms: {},
       currentUser: {}
     }
+
+    this.addMessage.bind(this);
   }
 
   componentDidMount() {
-    // for now, we'll have the top level listen for events from the server/db
-    // but depending on how it scales, we can move this down to the room level
-    db.Rooms.on('value', data => {
-      const rooms = data.val();
-      console.log('rooms', rooms);
+    db.Rooms.once('value', data => {
+      const initialRoomsState = data.val();
+      console.log('room', initialRoosState);
       this.setState({
-        rooms 
-      })
-    })  
+        rooms: initialRoomsState
+      });
+    });
+
+    db.Rooms.on('child_added', data => {
+      // add the room to state (no need for this feature currently)
+    });
+
+    db.Rooms.on('child_removed', data => {
+      // add the room to state (no need for this feature currently)
+    });
+  }
+
+  addMessages(messagesToAdd, roomId) {
+    this.setState(prevState => {
+      const { rooms } = prevState;
+      const messages = rooms[roomId].messages || {}
+      Object.assign(messages, )
+      return { rooms };
+    })
   }
 
   render() {
@@ -39,6 +61,7 @@ class App extends Component {
       room={onlyRoom}
       roomId={onlyRoomId}
       currentUser={currentUser}
+      addMessage={this.addMessage}
     />
   }
 }
